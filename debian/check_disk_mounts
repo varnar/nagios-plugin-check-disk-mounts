@@ -1,0 +1,39 @@
+#!/bin/bash
+
+exit_message=
+exit_status=0
+
+warnings=
+criticals=
+
+warning_threshold=$1%
+critical_threshold=$2%
+
+disks=$(cat /etc/mtab  | grep '^/dev/' | cut -f1 -d' ' | xargs)
+for disk in $disks
+  do
+  result=$(/usr/lib/nagios/plugins/check_disk -w $warning_threshold -c $critical_threshold -p $disk)
+  result_exit_status=$?
+  case "$result_exit_status" in
+    "0")
+      exit_message="$exit_message ++ $result"
+    ;;
+    "1")
+      warnings="$warnings ++ $result"
+    ;;
+    "2")
+      criticals="$criticals ++ $result"
+    ;;
+  esac
+done
+
+if [ "$criticals" != '' ]; then
+  exit_message="$criticals; $warnings"
+  exit_status=2
+elif [ "$warnings" != '' ]; then
+  exit_message=$warnings
+  exit_status=1
+fi
+
+echo -n $exit_message
+exit $exit_status
