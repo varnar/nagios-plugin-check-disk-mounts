@@ -9,7 +9,7 @@ criticals=
 warning_threshold=$1%
 critical_threshold=$2%
 
-disks=$(cat /etc/mtab  | grep '^/dev/' | cut -f1 -d' ' | xargs)
+disks=$(cat /etc/mtab  | grep '^/dev/' | cut -f1 -d' ' | sort | uniq | xargs)
 for disk in $disks
   do
   result=$(/usr/lib64/nagios/plugins/check_disk -w $warning_threshold -c $critical_threshold -p $disk)

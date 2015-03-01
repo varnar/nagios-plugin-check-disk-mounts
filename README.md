@@ -8,11 +8,17 @@ This plugin checks all available mount points using Nagios Plugin `check_disk`.
 This plugin makes available mount disk mounts without changing any configuration
 on Nagios Server or Client.
 
-Disks are fetched from `/etc/fstab`.
+Disks are fetched from `/etc/mtab`.
 
 syntax:
 
 check_disk_mounts $free_disk_space_warning_threshold $free_disk_space_critical_threshold
+
+
+## TODO:
+
+- Check for Platform and combine to one script
+- fix perf data
 
 ## License
 
